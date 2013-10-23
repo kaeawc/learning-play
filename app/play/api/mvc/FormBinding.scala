@@ -9,28 +9,28 @@ import ExecutionContext.Implicits.global
 
 trait FormBinding {
 
-  def badForm[T](form:Form[T]) = Future {
+  private def badForm[T](form:Form[T]) = Future {
     val errors = form.errors map {
       error => error.key -> JsString(error.message)
     }
     BadRequest(JsObject(errors))
   }
 
-  def internalError(reason:String) =
+  protected def internalError(reason:String) =
     InternalServerError(
       Json.obj(
         "reason" -> reason
       )
     )
 
-  def FormAction[Tuple]
+  protected def FormAction[Tuple]
     (form    : Form[Tuple])
     (success : Tuple => Future[SimpleResult]) =
   Action.async {
     implicit request => BindForm(form)(success)
   }
 
-  def BindForm[Tuple](
+  private def BindForm[Tuple](
     form    : Form[Tuple]
   )(
     success : Tuple => Future[SimpleResult]
