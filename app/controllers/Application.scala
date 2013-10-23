@@ -27,15 +27,23 @@ object Application extends Controller {
     BadRequest(JsObject(errors))
   }
 
+  def success(email:String) =
+    User.create(email) map {
+      case Some(user:User) =>
+        Accepted(Json.toJson(user))
+      case _ =>
+        InternalServerError(
+          Json.obj(
+            "reason" -> "Could not create User record."
+          )
+        )
+    }
+
   def sign = Action.async {
     implicit request =>
     emailForm.bindFromRequest match {
       case form:Form[String] if form.hasErrors => badForm[String](form)
-      case form:Form[String] =>
-        User.create(form.get) map {
-          case Some(user:User) => Accepted(Json.toJson(user))
-          case _ => InternalServerError(Json.obj("reason" -> "Could not create User record."))
-        }
+      case form:Form[String] => success(form.get)
     }
   }
 
