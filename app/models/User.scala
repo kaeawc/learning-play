@@ -22,8 +22,19 @@ object User extends ((
   implicit val r = Json.reads[User]
   implicit val w = Json.writes[User]
 
-  def create(email:String):Future[Option[User]] = {
+  def getById(id:Long):Future[Option[User]] = {
     Future { None }
   }
 
+  def findByEmail(email:String):Future[List[User]] = {
+    Future { Nil }
+  }
+
+  def findRecent:Future[List[User]] = {
+    Future { Nil }
+  }
+
+  def create(email:String):Future[Option[User]] = {
+    Future { None }
+  }
 }
