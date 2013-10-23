@@ -17,7 +17,7 @@ object Application extends Controller with FormBinding {
   }
 
   val emailForm = Form(
-    "email" -> text
+    "email" -> email
   )
 
   def sign = FormAction(emailForm) {
