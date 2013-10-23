@@ -2,6 +2,11 @@ package models
 
 import java.util.Date
 
+import anorm._
+import anorm.SqlParser._
+
+import play.api.db.DB
+import play.api.Play.current
 import play.api.libs.json._
 
 import scala.concurrent.{Future,ExecutionContext}
@@ -21,6 +26,14 @@ object User extends ((
 
   implicit val r = Json.reads[User]
   implicit val w = Json.writes[User]
+
+  val accounts =
+    long("id") ~
+    str("email") ~
+    date("created") map {
+      case   id~email~created =>
+        User(id,email,created)
+    }
 
   def getById(id:Long):Future[Option[User]] = {
     Future { None }
