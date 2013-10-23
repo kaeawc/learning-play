@@ -10,7 +10,7 @@ import ExecutionContext.Implicits.global
 
 import models.User
 
-object Application extends Controller {
+object Application extends Controller with FormBinding {
 
   def index = Action {
     Ok(views.html.index())
@@ -20,37 +20,14 @@ object Application extends Controller {
     "email" -> text
   )
 
-  def badForm[T](form:Form[T]) = Future {
-    val errors = form.errors map {
-      error => error.key -> JsString(error.message)
-    }
-    BadRequest(JsObject(errors))
-  }
+  def sign = FormAction(emailForm) {
+    email:String =>
 
-  def internalError(reason:String) =
-    InternalServerError(
-      Json.obj(
-        "reason" -> reason
-      )
-    )
-
-  def success(email:String) =
     User.create(email) map {
       case Some(user:User) =>
         Accepted(Json.toJson(user))
       case _ =>
         internalError("Could not create User record.")
     }
-
-  def sign = Action.async {
-    implicit request =>
-    emailForm.bindFromRequest match {
-      case form:Form[String] if form.hasErrors => badForm[String](form)
-      case form:Form[String] => success(form.get)
-    }
   }
-
-  implicit def kvToSeq(kv:(String,String)):JsValue = seqToJson(Seq(kv))
-  implicit def seqToJson(seq:Seq[(String,String)]):JsValue = JsObject(seq.map { case(k,v) => (k,JsString(v))})
-
 }
