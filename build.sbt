@@ -8,4 +8,14 @@ libraryDependencies ++= Seq(
   cache
 )     
 
+scalacOptions ++= Seq(
+  "-encoding",
+  "UTF-8",
+  "-deprecation",
+  "-unchecked",
+  "-feature",
+  "-language:postfixOps",
+  "-language:implicitConversions"
+)
+
 play.Project.playScalaSettings
