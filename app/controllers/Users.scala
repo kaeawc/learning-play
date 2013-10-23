@@ -16,7 +16,7 @@ object Users extends Controller with FormBinding {
     "email" -> email
   )
 
-  def sign = FormAction(emailForm) {
+  def create = FormAction(emailForm) {
     email:String =>
 
     User.create(email) map {

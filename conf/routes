@@ -1,9 +1,8 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
-
-# Home page
 GET     /                           controllers.Application.index
 
-# Map static resources from the /public folder to the /assets URL path
+GET     /user/:id                   controllers.Users.getById(id:Long)
+GET     /user/with/email/:email     controllers.Users.findByEmail(email:String)
+GET     /user/recent                controllers.Users.findRecent
+POST    /user                       controllers.Users.create
+
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
