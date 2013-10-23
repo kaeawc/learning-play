@@ -20,15 +20,17 @@ object Application extends Controller {
     "email" -> text
   )
 
+  def badForm[T](form:Form[T]) = Future {
+    val errors = form.errors map {
+      error => error.key -> JsString(error.message)
+    }
+    BadRequest(JsObject(errors))
+  }
+
   def sign = Action.async {
     implicit request =>
     emailForm.bindFromRequest match {
-      case form:Form[String] if form.hasErrors => Future {
-        val errors = form.errors.map {
-          error => error.key -> JsString(error.message)
-        }
-        BadRequest(JsObject(errors))
-      }
+      case form:Form[String] if form.hasErrors => badForm[String](form)
       case form:Form[String] =>
         User.create(form.get) map {
           case Some(user:User) => Accepted(Json.toJson(user))
