@@ -27,16 +27,19 @@ object Application extends Controller {
     BadRequest(JsObject(errors))
   }
 
+  def internalError(reason:String) =
+    InternalServerError(
+      Json.obj(
+        "reason" -> reason
+      )
+    )
+
   def success(email:String) =
     User.create(email) map {
       case Some(user:User) =>
         Accepted(Json.toJson(user))
       case _ =>
-        InternalServerError(
-          Json.obj(
-            "reason" -> "Could not create User record."
-          )
-        )
+        internalError("Could not create User record.")
     }
 
   def sign = Action.async {
