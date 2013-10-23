@@ -24,10 +24,37 @@ object Application extends Controller with FormBinding {
     email:String =>
 
     User.create(email) map {
-      case Some(user:User) =>
-        Accepted(Json.toJson(user))
-      case _ =>
-        internalError("Could not create User record.")
+      case Some(user:User) => Accepted(Json.toJson(user))
+      case _               => internalError("Could not create User")
+    }
+  }
+
+  def getById(id:Long) = Action.async {
+    implicit request =>
+
+    User.getById(id) map {
+      case Some(user:User) => Ok(Json.toJson(user))
+      case _               => internalError("Could not find User")
+    }
+  }
+
+  def findByEmail(email:String) = Action.async {
+    implicit request =>
+
+    User.findByEmail(email) map {
+      case user:List[User]
+        if user.length > 0  => Ok(Json.toJson(user))
+      case user:List[User]
+        if user.length == 0 => NoContent
+    }
+  }
+
+  def findRecent = Action.async {
+    implicit request =>
+
+    User.findRecent map {
+      case user:List[User] => Ok(Json.toJson(user))
+      case _               => internalError("Could not find User")
     }
   }
 }
