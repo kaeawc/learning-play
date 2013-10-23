@@ -20,7 +20,7 @@ object Users extends Controller with FormBinding {
     email:String =>
 
     User.create(email) map {
-      case Some(user:User) => Accepted(Json.toJson(user))
+      case Some(user:User) => Created(Json.toJson(user))
       case _               => internalError("Could not create User")
     }
   }
@@ -28,7 +28,7 @@ object Users extends Controller with FormBinding {
   def getById(id:Long) = Action.async {
     User.getById(id) map {
       case Some(user:User) => Ok(Json.toJson(user))
-      case _               => internalError("Could not find User")
+      case _               => NotFound
     }
   }
 
@@ -37,7 +37,7 @@ object Users extends Controller with FormBinding {
       case user:List[User]
         if user.length > 0  => Ok(Json.toJson(user))
       case user:List[User]
-        if user.length == 0 => NoContent
+        if user.length == 0 => NotFound
     }
   }
 
