@@ -27,6 +27,9 @@ object User extends ((
   implicit val r = Json.reads[User]
   implicit val w = Json.writes[User]
 
+  def parse(json:String) =
+    Json.fromJson(Json.parse(json)).get
+
   val users =
     long("id") ~
     str("email") ~
