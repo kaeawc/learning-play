@@ -2,6 +2,8 @@ package models
 
 import java.util.Date
 
+import play.api.libs.json._
+
 case class User(
   id      : Long,
   email   : String,
@@ -13,5 +15,8 @@ object User extends ((
   String,
   Date
 ) => User) {
+
+  implicit val r = Json.reads[User]
+  implicit val w = Json.writes[User]
 
 }
