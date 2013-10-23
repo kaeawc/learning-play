@@ -9,10 +9,12 @@ import ExecutionContext.Implicits.global
 
 trait FormBinding {
 
-  private def badForm[T](form:Form[T]) = Future {
+  private def badForm[Tuple](form:Form[Tuple]) = Future {
     val errors = form.errors map {
-      error => error.key -> JsString(error.message)
+      error => 
+      error.key -> JsString(error.message)
     }
+    
     BadRequest(JsObject(errors))
   }
 
