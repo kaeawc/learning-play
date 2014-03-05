@@ -14,9 +14,9 @@ class UserSpec extends Specification {
   import models.User
   import models.User._
 
-  "getById" should {
+  "GET /user/:id" should {
 
-    "return an User if one exists" in new WithApplication {
+    "return a User if one exists with the given id" in new WithApplication {
 
       val (email) = ("someone@example.com")
 
@@ -50,9 +50,9 @@ class UserSpec extends Specification {
     }
   }
 
-  "findByEmail" should {
+  "GET /user/with/email/:email" should {
 
-    "return an User if one exists" in new WithApplication {
+    "return Users that match the given email address" in new WithApplication {
 
       val (email) = ("someone@example.com")
 
@@ -74,7 +74,7 @@ class UserSpec extends Specification {
       }
     }
 
-    "return NotFound if user doesn't exist" in new WithApplication {
+    "return NotFound if no User has the given email address" in new WithApplication {
 
       val request = FakeRequest(GET, "/user/with/email/something@nowhere.com")
 
@@ -86,7 +86,7 @@ class UserSpec extends Specification {
   }
 
 
-  "create" should {
+  "POST /user" should {
 
     "return Accepted if creation was performed correctly" in new WithApplication {
 
