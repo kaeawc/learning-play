@@ -1,0 +1,7 @@
+@(users:List[User])
+
+<div class="user-list">
+@{ for(user <- users)
+  detail(user)
+}
+</div>
